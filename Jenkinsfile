@@ -1,7 +1,7 @@
 pipeline {
   environment {
     registry = "jpa42/calculator"
-    registryCredential = "dockerhub"
+    registryCredential = 'dockerhub' 
     dockerImage = ''
   }
 
