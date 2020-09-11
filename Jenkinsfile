@@ -1,8 +1,7 @@
 pipeline {
   environment {
-    registry = "jpa42/calculator"
-    registryCredential = 'dockerhub' 
-    dockerImage = ''
+     registry = "jpa42/calculator"
+     registryCredential = 'dockerhub'
   }
 
   agent any
@@ -18,21 +17,21 @@ pipeline {
           steps {
               sh 'mvn clean'
           }
-      }
+     }
 
-      stage ('Build') {
+     stage ('Build') {
           steps {
               sh 'mvn compile'
           }
-      }
+     }
 
-      stage ('Short Tests') {
+     stage ('Short Tests') {
           steps {
               sh 'mvn -Dtest=CalculatorTest test'
           }
-      }
+     }
 
-      stage ('Long Tests') {
+     stage ('Long Tests') {
           steps {
               sh 'mvn -Dtest=CalculatorTestThorough test'
           }
@@ -41,25 +40,25 @@ pipeline {
                   junit 'target/surefire-reports/**/*.xml'
               }
           }
-      }
+     }
 
-      stage ('Package') {
+     stage ('Package') {
           steps {
               sh 'mvn package'
               archiveArtifacts artifacts: 'src/**/*.java'
               archiveArtifacts artifacts: 'target/*.jar'
           }
-      }
+     }
 
-      stage('Building image') {
+     stage('Building image') {
         steps{
           script {
             dockerImage = docker.build registry + ":$BUILD_NUMBER"
           }
         }
-      }
+     }
 
-      stage('Deploy Image') {
+     stage('Deploy Image') {
         steps{
           script {
             docker.withRegistry( '', registryCredential ) {
@@ -67,20 +66,20 @@ pipeline {
             }
           }
         }
-      }
+     }
 
-      stage('Remove Unused docker image') {
+     stage('Remove Unused docker image') {
           steps{
             sh "docker rmi $registry:$BUILD_NUMBER"
           }
         }
-      }
+     }
 
-      post {
+     post {
           failure {
               mail to: 'jpandersen42@gmail.com',
               subject: "Failed Pipeline: ${currentBuild.fullDisplayName}",
               body: "Something is wrong with ${env.BUILD_URL}"
           }
-      }
+     }
 }
