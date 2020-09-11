@@ -3,7 +3,7 @@ pipeline {
     registry = "jpa42/calculator"
     registryCredential = 'dockerhub'
     dockerImage = ''
-  }
+  } 
 
   agent any
 
