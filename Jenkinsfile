@@ -1,14 +1,14 @@
 pipeline {
   environment {
      registry = "jpa42/calculator"
-     registryCredential = 'dockerhub'
+     registryCredential = '1c2d7b2b-198b-450b-908c-b1be42368723'
   }
 
   agent any
 
   tools {
      maven 'apache maven 3.6.3'
-     jdk 'JDK 8' 
+     jdk 'JDK 8'
   }
 
   stages {
